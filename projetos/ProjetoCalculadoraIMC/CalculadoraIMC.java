@@ -24,13 +24,16 @@ public class CalculadoraIMC extends Application {
 
         Button botaoCalcular = new Button("Calcular IMC");
         botaoCalcular.setOnAction(e -> {
+            try {
+                //transforma string em double
+                double peso = Double.parseDouble(campoPeso.getText().replace(',','.'));
+                double altura = Double.parseDouble(campoAltura.getText().replace(',','.'));
 
-            //transforma string em double
-            double peso = Double.parseDouble(campoPeso.getText());
-            double altura = Double.parseDouble(campoAltura.getText());
-
-            double imc = peso / (altura * altura);
-            etiquetaResultado.setText(String.format("Seu IMC é: %.2f", imc));
+                double imc = peso / (altura * altura);
+                etiquetaResultado.setText(String.format("Seu IMC é: %.2f", imc));
+            } catch (NumberFormtException ex) {
+                etiquetaResultado.setText("Por favor, insira numeros validos para peso e altura");
+            }
         });
 
         //layout vertical
@@ -40,7 +43,7 @@ public class CalculadoraIMC extends Application {
         layout.setAlignment(Pos.CENTER);
 
         //Cena e Palco
-        Scene cena = new Scene(layout, 300, 250);
+        Scene cena = new Scene(layout, 350, 250);
         palco.setTitle("Calculadora de IMC");
         palco.setScene(cena);
         palco.show();
