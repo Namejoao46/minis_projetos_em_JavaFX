@@ -17,7 +17,7 @@ public class NavegadorWeb extends Application{
         WebView navegador = new WebView();
         WebEngine motor = navegador.getEngine();
 
-        //carregar uma pag web ao usuario precionanr enter
+        //carregar uma pag web ao usuario precionar enter
         url.setOnAction(evento -> motor.load(formataUrl(url.getText())));
 
         VBox vbox = new VBox();
