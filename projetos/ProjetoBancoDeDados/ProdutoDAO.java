@@ -8,15 +8,13 @@ import java.util.List;
 public class ProdutoDAO {
     private final Connection CONEXAO_DB;
 
-    //construtor que inicializa a conexao com o banco de dados
-    public ProdutoDAO(Connection conexao){
+    public ProdutoDAO(Connection conexao) {
         this.CONEXAO_DB = conexao;
     }
 
-    //metodo para inserir um novo produto no banco de dados
-    public void inserir(Produto produto){
-        String sql = "INSERT INTO produtos (nome_produto, quantidade, preco, status) VALUES (?, ?, ?, ?";
-        try (PreparedStatement stmt = CONEXAO_DB.preparedStatement(sql)){
+    public void inserir(Produto produto) {
+        String sql = "INSERT INTO produtos (nome_produto, quantidade, preco, status) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = CONEXAO_DB.prepareStatement(sql)) {
             stmt.setString(1, produto.getNome());
             stmt.setInt(2, produto.getQuantidade());
             stmt.setDouble(3, produto.getPreco());
@@ -27,29 +25,29 @@ public class ProdutoDAO {
         }
     }
 
-    public void excluirTodos(){
+    public void excluirTodos() {
         String sql = "DELETE FROM produtos";
-        try (PreparedStatement stmt = CONEXAO_DB.preparedStatement(sql)){
+        try (PreparedStatement stmt = CONEXAO_DB.prepareStatement(sql)) {
             stmt.executeUpdate();
-            stmt.
         } catch (SQLException e) {
-            System.err.println("Erro ao excluir todos os produto: " + e.getMessage());
+            System.err.println("Erro ao excluir todos os produtos: " + e.getMessage());
         }
     }
 
-    public Produto consultarPorId (int id) {
+    public Produto consultarPorId(int id) {
         String sql = "SELECT * FROM produtos WHERE id_produto = ?";
-        try (PreparedStatement stmt = CONEXAO_DB.preparedStatement(sql);
-            ResultSet rs = stmt.executeQuery()){
-            stmt.setInt(i, id);
-            if( rs.next()) {
-                Produto produto = new Produto();
-                produto.setId(rs.getInt("id_produto"));
-                produto.setNome(rs.getString("nome_produto"));
-                produto.setQuantidade(rs.getInt("quantidade"));
-                produto.setPreco(rs.getDouble("preco"));
-                produto.setStatus(rs.getStatus("status"));
-                return produto;
+        try (PreparedStatement stmt = CONEXAO_DB.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Produto produto = new Produto();
+                    produto.setId(rs.getInt("id_produto"));
+                    produto.setNome(rs.getString("nome_produto"));
+                    produto.setQuantidade(rs.getInt("quantidade"));
+                    produto.setPreco(rs.getDouble("preco"));
+                    produto.setStatus(rs.getString("status"));
+                    return produto;
+                }
             }
         } catch (SQLException e) {
             System.err.println("Erro ao consultar produto por ID: " + e.getMessage());
@@ -57,9 +55,9 @@ public class ProdutoDAO {
         return null;
     }
 
-    public void atualizar(Produto produto){
+    public void atualizar(Produto produto) {
         String sql = "UPDATE produtos SET nome_produto = ?, quantidade = ?, preco = ?, status = ? WHERE id_produto = ?";
-        try(PreparedeStatemente stmt = CONEXAO_DB.preparedStatement(sql)) {
+        try (PreparedStatement stmt = CONEXAO_DB.prepareStatement(sql)) {
             stmt.setString(1, produto.getNome());
             stmt.setInt(2, produto.getQuantidade());
             stmt.setDouble(3, produto.getPreco());
@@ -71,9 +69,9 @@ public class ProdutoDAO {
         }
     }
 
-    public void excluir(int id){
+    public void excluir(int id) {
         String sql = "DELETE FROM produtos WHERE id_produto = ?";
-        try(PreparedeStatemente stmt = CONEXAO_DB.preparedStatement(sql)) {
+        try (PreparedStatement stmt = CONEXAO_DB.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -81,18 +79,18 @@ public class ProdutoDAO {
         }
     }
 
-    public list<Produto> listarTodos(){
+    public List<Produto> listarTodos() {
         List<Produto> produtos = new ArrayList<>();
-        String sql = "SELECT FROM produtos";
-        try(PreparedeStatemente stmt = CONEXAO_DB.preparedStatement(sql);
-            ResultSet rs = stmt.executeQuery()) {
+        String sql = "SELECT * FROM produtos";
+        try (PreparedStatement stmt = CONEXAO_DB.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Produto produto = new Produto();
                 produto.setId(rs.getInt("id_produto"));
                 produto.setNome(rs.getString("nome_produto"));
                 produto.setQuantidade(rs.getInt("quantidade"));
                 produto.setPreco(rs.getDouble("preco"));
-                produto.setStatus(rs.getStatus("status"));
+                produto.setStatus(rs.getString("status"));
                 produtos.add(produto);
             }
         } catch (SQLException e) {
@@ -100,6 +98,4 @@ public class ProdutoDAO {
         }
         return produtos;
     }
-
-
 }
