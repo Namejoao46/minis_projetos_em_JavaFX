@@ -9,11 +9,11 @@ public class CriadorTabela {
 
             // definindo o comando sql para criar a tabela
             String comandoSql = "CREATE TABLE produtos (" +
-                    "id_produto INTEGER PRIMARY KEY," +
-                    "nome_produto TEXT NOT NULL," +
-                    "quantidade INTERGE," +
-                    "preco REAL," +
-                    "status TEXT" +
+                    "id_produto INT AUTO_INCREMENT PRIMARY KEY," +
+                    "nome_produto VARCHAR(100) NOT NULL," +
+                    "quantidade INT," +
+                    "preco DOUBLE," +
+                    "status VARCHAR(50)" +
                     ");";
             System.out.println(comandoSql);
 

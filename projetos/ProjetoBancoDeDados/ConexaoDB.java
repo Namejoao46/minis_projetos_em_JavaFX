@@ -3,21 +3,20 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexaoDB {
-    private static final String URL_JDBC_PADRAO = "jdbc:mysql:projeto_java.db";
-
-    public static Connection conectar(){
+    public static Connection conectar() {
         try {
-            return DriverManager.getConnection(URL_JDBC_PADRAO);
-        } catch (SQLException e) {
-            System.err.println("Erro ao conectar ao banco de dados: " + e.getMessage());
-            return null;
-        }
-    }
+            // Força o carregamento do driver JDBC
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
-    public static Connection conectarGenerico(String url, String usuario, String senha){
-        try {
+            String url = "jdbc:mysql://localhost:3306/projeto_java?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+            String usuario = "root";   // seu usuário do MySQL
+            String senha = "1811"; // sua senha configurada no Workbench
+
             return DriverManager.getConnection(url, usuario, senha);
-        } catch (SQLException e){
+        } catch (ClassNotFoundException e) {
+            System.err.println("Driver JDBC do MySQL não encontrado: " + e.getMessage());
+            return null;
+        } catch (SQLException e) {
             System.err.println("Erro ao conectar ao banco de dados: " + e.getMessage());
             return null;
         }
